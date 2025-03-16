@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8;net9</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <NoWarn>1591</NoWarn>
+    <PreferredUILang>en</PreferredUILang>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <NoWarn>$(NoWarn);8602;8604</NoWarn>
+  </PropertyGroup>
+</Project>
