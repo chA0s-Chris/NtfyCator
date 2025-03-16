@@ -2,21 +2,24 @@
 // This file is licensed under the MIT license. See LICENSE in the project root for more information.
 namespace NtfyCator;
 
+using Microsoft.Extensions.Options;
+using NtfyCator.Communications;
 using NtfyCator.Messages;
+using NtfyCator.Options;
 using NtfyCator.Security;
 
 internal sealed class Notificator : INotificator
 {
-    private readonly HttpClient _httpClient;
+    private readonly INtfyHttpClient _httpClient;
+    private readonly NtfyCatorOptions _options;
     private NotificatorSecurity _security = new DisabledNotificatorSecurity();
 
-    public Notificator(Uri serverUri, HttpClient httpClient)
+    public Notificator(INtfyHttpClient httpClient, IOptions<NtfyCatorOptions> options)
     {
-        ServerUri = serverUri ?? throw new ArgumentNullException(nameof(serverUri));
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _options = options.Value ?? throw new ArgumentException("Value cannot be null.", nameof(options));
 
-        if (!ServerUri.IsAbsoluteUri)
-            throw new ArgumentException("Value must be an absolute URI.", nameof(serverUri));
+        ServerUri = new(_options.Uri, UriKind.Absolute);
     }
 
     public Uri ServerUri { get; }

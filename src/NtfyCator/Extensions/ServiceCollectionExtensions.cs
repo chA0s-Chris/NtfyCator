@@ -4,26 +4,29 @@
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using NtfyCator;
-using NtfyCator.Factories;
+using NtfyCator.Communications;
 using NtfyCator.Options;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddNtfyCator(this IServiceCollection services, Action<NtfyCatorOptions> options)
+    public static IServiceCollection AddNtfyCator(this IServiceCollection services,
+                                                  Action<NtfyCatorOptions>? configureOptions = null,
+                                                  Action<HttpClient>? configureClient = null)
     {
-        services.AddHttpClient();
-        services.Configure(NtfyCatorOptions.SectionName, options);
-
-        services.TryAddSingleton<INotificatorFactory, NotificatorFactory>();
-        services.TryAddSingleton<INotificator>(serviceProvider =>
+        services.AddOptions<NtfyCatorOptions>();
+        if (configureOptions is not null)
         {
-            var notificatorOptions = serviceProvider.GetRequiredService<IOptions<NtfyCatorOptions>>().Value;
-            var notificatorFactory = serviceProvider.GetRequiredService<INotificatorFactory>();
-            return notificatorFactory.Create(notificatorOptions.Uri);
+            services.Configure(configureOptions);
+        }
+
+        services.AddHttpClient<NtfyHttpClient>(httpClient =>
+        {
+            configureClient?.Invoke(httpClient);
         });
+
+        services.AddTransient<INtfyHttpClient>(serviceProvider => serviceProvider.GetRequiredService<NtfyHttpClient>());
+        services.AddTransient<INotificator, Notificator>();
 
         return services;
     }

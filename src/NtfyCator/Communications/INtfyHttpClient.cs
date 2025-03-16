@@ -1,10 +1,8 @@
 // Copyright (c) 2025 Christian Flessa. All rights reserved.
 // This file is licensed under the MIT license. See LICENSE in the project root for more information.
-namespace NtfyCator.Factories;
+namespace NtfyCator.Communications;
 
-public interface INotificatorFactory
+public interface INtfyHttpClient
 {
-    INotificator Create(String serverUri);
-
-    INotificator Create(Uri? serverUri = null);
+    
 }

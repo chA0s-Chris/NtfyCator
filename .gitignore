@@ -502,3 +502,6 @@ $RECYCLE.BIN/
 # Nuke
 .nuke/*
 !.nuke/parameters.json
+
+# testing
+test/NtfyCator.Tests/BasicTest.cs
