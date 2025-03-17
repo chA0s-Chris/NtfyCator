@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Net.Http.Json" />
     <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   <ItemGroup>

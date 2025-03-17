@@ -4,5 +4,5 @@ namespace NtfyCator.Security;
 
 public abstract class NotificatorSecurity
 {
-
+    public abstract void SecureRequest(HttpRequestMessage request);
 }

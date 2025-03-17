@@ -6,7 +6,5 @@ using NtfyCator.Resources;
 
 public class NtfyCatorOptions
 {
-    public const String SectionName = "NtfyCator";
-
     public String Uri { get; set; } = Defaults.ServerUri;
 }

@@ -4,7 +4,7 @@ namespace NtfyCator;
 
 using NtfyCator.Messages;
 
-public sealed class NotificationBuilder : NtfyMessageBuilderBase
+public sealed class NotificationBuilder : NtfyMessageBuilderBase<NotificationBuilder>
 {
     private readonly INotificator _notificator;
 

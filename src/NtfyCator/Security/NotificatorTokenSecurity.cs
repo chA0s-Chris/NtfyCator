@@ -11,4 +11,11 @@ public sealed class NotificatorTokenSecurity : NotificatorSecurity
         if (String.IsNullOrWhiteSpace(accessToken)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(accessToken));
         _accessToken = accessToken;
     }
+
+    public override void SecureRequest(HttpRequestMessage request)
+    {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+
+        request.Headers.Authorization = new("Bearer", _accessToken);
+    }
 }

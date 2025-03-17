@@ -4,7 +4,7 @@ namespace NtfyCator.Messages;
 
 using System.ComponentModel;
 
-public abstract class NtfyMessageBuilderBase
+public abstract class NtfyMessageBuilderBase<TBuilder> where TBuilder : NtfyMessageBuilderBase<TBuilder>
 {
     private readonly NtfyMessage _message;
 
@@ -20,52 +20,55 @@ public abstract class NtfyMessageBuilderBase
 
     protected NtfyMessage Message => _message;
 
-    public NtfyMessageBuilderBase WithBody(String body, Boolean useMarkdown = false)
+    public TBuilder WithBody(String body, Boolean useMarkdown = false)
     {
         if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(body));
 
+        if (useMarkdown)
+            _message.UseMarkdown = true;
+
         _message.Body = body;
-        return this;
+        return (TBuilder)this;
     }
 
-    public NtfyMessageBuilderBase WithMarkdownBody(String body)
+    public TBuilder WithMarkdownBody(String body)
         => WithBody(body, true);
 
-    public NtfyMessageBuilderBase WithPriority(NtfyPriority priority)
+    public TBuilder WithPriority(NtfyPriority priority)
     {
         if (!Enum.IsDefined(typeof(NtfyPriority), priority)) throw new InvalidEnumArgumentException(nameof(priority), (Int32)priority, typeof(NtfyPriority));
 
         _message.Priority = priority;
-        return this;
+        return (TBuilder)this;
     }
 
-    public NtfyMessageBuilderBase WithTag(String tag)
+    public TBuilder WithTag(String tag)
     {
         if (String.IsNullOrWhiteSpace(tag)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(tag));
 
         _message.Tags ??= [];
         _message.Tags.Add(tag);
-        return this;
+        return (TBuilder)this;
     }
 
-    public NtfyMessageBuilderBase WithTags(IEnumerable<String> tags)
+    public TBuilder WithTags(IEnumerable<String> tags)
         => WithTags(tags.ToArray());
 
-    public NtfyMessageBuilderBase WithTags(params String[] tags)
+    public TBuilder WithTags(params String[] tags)
     {
         if (tags == null) throw new ArgumentNullException(nameof(tags));
         if (tags.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(tags));
 
         _message.Tags ??= [];
         _message.Tags.AddRange(tags);
-        return this;
+        return (TBuilder)this;
     }
 
-    public NtfyMessageBuilderBase WithTitle(String title)
+    public TBuilder WithTitle(String title)
     {
         if (String.IsNullOrWhiteSpace(title)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(title));
 
         _message.Title = title;
-        return this;
+        return (TBuilder)this;
     }
 }

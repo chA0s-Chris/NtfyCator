@@ -4,7 +4,5 @@ namespace NtfyCator.Resources;
 
 public static class Defaults
 {
-    public const String HttpClientName = "NtfyCator_HttpClient";
-
     public const String ServerUri = "https://ntfy.sh";
 }
