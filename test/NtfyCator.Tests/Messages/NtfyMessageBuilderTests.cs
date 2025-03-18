@@ -13,6 +13,9 @@ public class NtfyMessageBuilderTests
     private static readonly List<String> _emojisAsStrings = ["zzz", "rocket", "face_with_head_bandage"];
     private static readonly List<String> _tags = ["tag1", "tag2"];
     private readonly String _body = "This is **just** a _Test_!";
+    private readonly String _email = "none@of.your.biz";
+    private readonly String _file = "my.file.dat";
+    private readonly Uri _fileUri = new("https://my.file.com/file.dat");
     private readonly NtfyPriority _priority = NtfyPriority.High;
     private readonly String _title = "title";
     private readonly String _topic = "topic";
@@ -66,10 +69,139 @@ public class NtfyMessageBuilderTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
+    public void WithAttachment_NullOrWhitespaceUri_ThrowsArgumentException(String? uri)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithAttachment(uri!))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
+    public void WithAttachment_NullUri_ThrowsArgumentNullException()
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithAttachment((Uri)null!))
+                     .Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    public void WithAttachment_ValidUriAndName_SetsAttachmentAndAttachmentName()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithAttachment(_fileUri, _file)
+                      .Build();
+
+        message.AttachmentUri.Should().Be(_fileUri);
+        message.AttachmentName.Should().Be(_file);
+    }
+
+    [Test]
+    public void WithAttachment_ValidUriString_SetsAttachment()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithAttachment(_fileUri.ToString())
+                      .Build();
+
+        message.AttachmentUri.Should().Be(_fileUri);
+        message.AttachmentName.Should().BeNull();
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
     public void WithBody_NullOrWhitespaceBody_ThrowsArgumentException(String? body)
     {
         FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithBody(body!))
                      .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void WithClickUri_NullOrWhitespaceUri_ThrowsArgumentException(String? uri)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithClickUri(uri!))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
+    public void WithClickUri_NullUri_ThrowsArgumentNullException()
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithClickUri((Uri)null!))
+                     .Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    public void WithClickUri_ValidUri_SetsClickUri()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithClickUri(_fileUri)
+                      .Build();
+
+        message.ClickUri.Should().Be(_fileUri);
+    }
+
+    [Test]
+    public void WithClickUri_ValidUriString_SetsClickUri()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithClickUri(_fileUri.ToString())
+                      .Build();
+
+        message.ClickUri.Should().Be(_fileUri);
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
+    public void WithEmail_NullOrWhitespaceEmail_ThrowsArgumentException(String? email)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithEmail(email!))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
+    public void WithEmail_ValidEmail_SetsEmail()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithEmail(_email)
+                      .Build();
+
+        message.Email.Should().Be(_email);
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void WithIconUri_NullOrWhitespaceUri_ThrowsArgumentException(String? uri)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithIconUri(uri!))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
+    public void WithIconUri_NullUri_ThrowsArgumentNullException()
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithIconUri((Uri)null!))
+                     .Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    public void WithIconUri_ValidUri_SetsClickUri()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithIconUri(_fileUri)
+                      .Build();
+
+        message.IconUri.Should().Be(_fileUri);
+    }
+
+    [Test]
+    public void WithIconUri_ValidUriString_SetsClickUri()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithIconUri(_fileUri.ToString())
+                      .Build();
+
+        message.IconUri.Should().Be(_fileUri);
     }
 
     [TestCase((NtfyPriority)100)]
@@ -112,7 +244,6 @@ public class NtfyMessageBuilderTests
                      .Should().ThrowExactly<InvalidEnumArgumentException>();
     }
 
-
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
@@ -128,6 +259,7 @@ public class NtfyMessageBuilderTests
         FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTags(Array.Empty<Emoji>()))
                      .Should().ThrowExactly<ArgumentException>();
     }
+
 
     [Test]
     public void WithTags_EmptyTags_ThrowsArgumentException()
