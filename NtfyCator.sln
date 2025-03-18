@@ -29,11 +29,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1F6CF34D-4CC9-4BDB-A5DD-968873EC6831}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{A8E028A6-4B85-42B0-9E59-E0AA12C36D29}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{510CAD19-651B-4CC2-858B-B7BC6F89A7B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NtfyCatorTools", "src\NtfyCatorTools\NtfyCatorTools.csproj", "{7B2E61B7-FD76-4807-8998-3D7A69C2A92D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +48,7 @@ Global
 		{DB92CF59-B2C7-4374-9BBF-A8C3C758E551} = {1F6CF34D-4CC9-4BDB-A5DD-968873EC6831}
 		{A8E028A6-4B85-42B0-9E59-E0AA12C36D29} = {6DD5359D-818D-474E-B0DB-1F81CAA97CCA}
 		{510CAD19-651B-4CC2-858B-B7BC6F89A7B5} = {A8E028A6-4B85-42B0-9E59-E0AA12C36D29}
+		{7B2E61B7-FD76-4807-8998-3D7A69C2A92D} = {B9AF4755-B2D7-486D-A43B-4ABD3AF39CAC}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DB92CF59-B2C7-4374-9BBF-A8C3C758E551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -61,5 +61,9 @@ Global
 		{635EBA3B-388F-44BB-B827-951CC1E740E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{635EBA3B-388F-44BB-B827-951CC1E740E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{635EBA3B-388F-44BB-B827-951CC1E740E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B2E61B7-FD76-4807-8998-3D7A69C2A92D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B2E61B7-FD76-4807-8998-3D7A69C2A92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B2E61B7-FD76-4807-8998-3D7A69C2A92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B2E61B7-FD76-4807-8998-3D7A69C2A92D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
