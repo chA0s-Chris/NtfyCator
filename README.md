@@ -72,7 +72,7 @@ await notificator.NotifyTopic("my-topic")
                  .SendAsync();
 ```
 
-### Authorization
+### Authorization / Authentication
 
 **NtfyCator** currently supports access token authorization. To enable it simply call before first usage:
 
@@ -81,6 +81,14 @@ notificator.WithAccessToken("tk_xxxxxxxxxxxxxxxxx");
 ```
 
 Every subsequent notification will use the access token as Bearer Token.
+
+As an alternative, **NtfyCator** also supports user/password authentication:
+
+```csharp
+notificator.WithCredentials("username", "my*password");
+```
+
+If possible you should always prefer token authorization over providing username and password.
 
 ## Configuration Options
 

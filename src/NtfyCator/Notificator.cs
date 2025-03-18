@@ -36,4 +36,13 @@ internal sealed class Notificator : INotificator
         _httpClient.SetSecurity(new NotificatorTokenSecurity(accessToken));
         return this;
     }
+
+    public INotificator WithCredentials(String user, String password)
+    {
+        if (String.IsNullOrWhiteSpace(user)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(user));
+        if (String.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(password));
+
+        _httpClient.SetSecurity(new NotificatorCredentialsSecurity(user, password));
+        return this;
+    }
 }

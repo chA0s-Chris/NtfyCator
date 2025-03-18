@@ -116,4 +116,52 @@ public class NotificatorTests
         ntfyHttpClientMock.VerifyAll();
         optionsMock.VerifyAll();
     }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
+    public void WithCredentials_NullOrWhitespacePassword_ThrowsArgumentException(String? password)
+    {
+        var optionsMock = new Mock<IOptions<NtfyCatorOptions>>(MockBehavior.Strict);
+        optionsMock.Setup(x => x.Value).Returns(new NtfyCatorOptions());
+
+        var notificator = new Notificator(Mock.Of<INtfyHttpClient>(), optionsMock.Object);
+
+        FluentActions.Invoking(() => notificator.WithCredentials("user", password!))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
+    public void WithCredentials_NullOrWhitespaceUser_ThrowsArgumentException(String? user)
+    {
+        var optionsMock = new Mock<IOptions<NtfyCatorOptions>>(MockBehavior.Strict);
+        optionsMock.Setup(x => x.Value).Returns(new NtfyCatorOptions());
+
+        var notificator = new Notificator(Mock.Of<INtfyHttpClient>(), optionsMock.Object);
+
+        FluentActions.Invoking(() => notificator.WithCredentials(user!, "password"))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
+    public void WithCredentials_UserAndPassword_SetsSecurity()
+    {
+        var ntfyHttpClientMock = new Mock<INtfyHttpClient>(MockBehavior.Strict);
+        ntfyHttpClientMock.Setup(x => x.SetSecurity(It.IsAny<NotificatorSecurity>()))
+                          .Callback<NotificatorSecurity>(security =>
+                          {
+                              security.Should().BeOfType<NotificatorCredentialsSecurity>();
+                          });
+
+        var optionsMock = new Mock<IOptions<NtfyCatorOptions>>(MockBehavior.Strict);
+        optionsMock.Setup(x => x.Value).Returns(new NtfyCatorOptions());
+
+        new Notificator(ntfyHttpClientMock.Object, optionsMock.Object)
+            .WithCredentials("user", "password");
+
+        ntfyHttpClientMock.VerifyAll();
+        optionsMock.VerifyAll();
+    }
 }

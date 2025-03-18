@@ -11,4 +11,6 @@ public interface INotificator
     Task NotifyAsync(NtfyMessage message, CancellationToken cancellationToken = default);
 
     INotificator WithAccessToken(String accessToken);
+
+    INotificator WithCredentials(String user, String password);
 }
