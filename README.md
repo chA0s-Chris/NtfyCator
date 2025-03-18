@@ -5,7 +5,9 @@ A minimalistic .NET library for publishing messages to [ntfy.sh](https://ntfy.sh
 ## Features
 
 ✅ Simple and lightweight
+
 ✅ Async-friendly API
+
 ✅ Easy integration
 
 ## Installation
@@ -89,6 +91,16 @@ notificator.WithCredentials("username", "my*password");
 ```
 
 If possible you should always prefer token authorization over providing username and password.
+
+### Emoji Support
+
+`ntfy.sh` uses a wide range of custom tags that will be transformed into emojis. **NtfyCator** supports adding emojis as tags and provides an `Emoji` enum type so you don't need to use magic strings.
+
+```csharp
+var message = new NtfyMessageBuilder("my-topic")
+              .WithTags(Emoji.Wink, Emoji.Rocket) // 😉, 🚀
+              .Build();
+```
 
 ## Configuration Options
 

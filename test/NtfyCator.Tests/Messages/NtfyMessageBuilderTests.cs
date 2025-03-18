@@ -9,6 +9,8 @@ using System.ComponentModel;
 
 public class NtfyMessageBuilderTests
 {
+    private static readonly List<Emoji> _emojis = [Emoji.Zzz, Emoji.Rocket, Emoji.FaceWithHeadBandage];
+    private static readonly List<String> _emojisAsStrings = ["zzz", "rocket", "face_with_head_bandage"];
     private static readonly List<String> _tags = ["tag1", "tag2"];
     private readonly String _body = "This is **just** a _Test_!";
     private readonly NtfyPriority _priority = NtfyPriority.High;
@@ -31,6 +33,16 @@ public class NtfyMessageBuilderTests
         message.Title.Should().Be(_title);
         message.Topic.Should().Be(_topic);
         message.UseMarkdown.Should().BeTrue();
+    }
+
+    [Test]
+    public void Build_WithEmojis_ReturnsCorrectNtfyMessage()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithTags(_emojis)
+                      .Build();
+
+        message.Tags.Should().BeEquivalentTo(_emojisAsStrings);
     }
 
     [TestCase(null)]
@@ -70,6 +82,18 @@ public class NtfyMessageBuilderTests
     }
 
     [Test]
+    public void WithTag_Called3TimesWithEmojis_SetsAllTags()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithTag(_emojis[0])
+                      .WithTag(_emojis[1])
+                      .WithTag(_emojis[2])
+                      .Build();
+
+        message.Tags.Should().BeEquivalentTo(_emojisAsStrings);
+    }
+
+    [Test]
     public void WithTag_CalledTwice_SetsBothTags()
     {
         var message = new NtfyMessageBuilder(_topic)
@@ -79,6 +103,15 @@ public class NtfyMessageBuilderTests
 
         message.Tags.Should().BeEquivalentTo(_tags);
     }
+
+    [TestCase((Emoji)10000)]
+    [TestCase((Emoji)Int32.MaxValue)]
+    public void WithTag_InvalidEmoji_ThrowsInvalidEnumArgumentException(Emoji emoji)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTag(emoji))
+                     .Should().ThrowExactly<InvalidEnumArgumentException>();
+    }
+
 
     [TestCase(null)]
     [TestCase("")]
@@ -90,16 +123,30 @@ public class NtfyMessageBuilderTests
     }
 
     [Test]
+    public void WithTags_EmptyEmojis_ThrowsArgumentException()
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTags(Array.Empty<Emoji>()))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
     public void WithTags_EmptyTags_ThrowsArgumentException()
     {
-        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTags([]))
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTags(Array.Empty<String>()))
                      .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
+    public void WithTags_NullEmojis_ThrowsArgumentNullException()
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTags((Emoji[])null!))
+                     .Should().ThrowExactly<ArgumentNullException>();
     }
 
     [Test]
     public void WithTags_NullTags_ThrowsArgumentNullException()
     {
-        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTags(null!))
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTags((String[])null!))
                      .Should().ThrowExactly<ArgumentNullException>();
     }
 

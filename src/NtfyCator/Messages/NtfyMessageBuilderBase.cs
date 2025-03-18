@@ -51,6 +51,28 @@ public abstract class NtfyMessageBuilderBase<TBuilder> where TBuilder : NtfyMess
         return (TBuilder)this;
     }
 
+    public TBuilder WithTag(Emoji emoji)
+    {
+        if (!Enum.IsDefined(typeof(Emoji), emoji)) throw new InvalidEnumArgumentException(nameof(emoji), (Int32)emoji, typeof(Emoji));
+
+        _message.Tags ??= [];
+        _message.Tags.Add(EmojiHelper.GetEmojiValue(emoji));
+        return (TBuilder)this;
+    }
+
+    public TBuilder WithTags(IEnumerable<Emoji> emojis)
+        => WithTags(emojis.ToArray());
+
+    public TBuilder WithTags(params Emoji[] emojis)
+    {
+        if (emojis == null) throw new ArgumentNullException(nameof(emojis));
+        if (emojis.Length == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(emojis));
+
+        _message.Tags ??= [];
+        _message.Tags.AddRange(emojis.Select(EmojiHelper.GetEmojiValue));
+        return (TBuilder)this;
+    }
+
     public TBuilder WithTags(IEnumerable<String> tags)
         => WithTags(tags.ToArray());
 
