@@ -85,6 +85,15 @@ public abstract class NtfyMessageBuilderBase<TBuilder> where TBuilder : NtfyMess
     public TBuilder WithMarkdownBody(String body)
         => WithBody(body, true);
 
+    public TBuilder WithPhoneNumber(String phoneNumber)
+    {
+        if (String.IsNullOrWhiteSpace(phoneNumber)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(phoneNumber));
+
+        PhoneNumberHelper.Validate(phoneNumber);
+        _message.PhoneNumber = phoneNumber;
+        return (TBuilder)this;
+    }
+
     public TBuilder WithPriority(NtfyPriority priority)
     {
         if (!Enum.IsDefined(typeof(NtfyPriority), priority)) throw new InvalidEnumArgumentException(nameof(priority), (Int32)priority, typeof(NtfyPriority));
@@ -142,6 +151,12 @@ public abstract class NtfyMessageBuilderBase<TBuilder> where TBuilder : NtfyMess
         if (String.IsNullOrWhiteSpace(title)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(title));
 
         _message.Title = title;
+        return (TBuilder)this;
+    }
+
+    public TBuilder WithVerifiedPhoneNumber()
+    {
+        _message.PhoneNumber = "yes";
         return (TBuilder)this;
     }
 }

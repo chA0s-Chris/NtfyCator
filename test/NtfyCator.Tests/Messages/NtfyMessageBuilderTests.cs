@@ -204,6 +204,37 @@ public class NtfyMessageBuilderTests
         message.IconUri.Should().Be(_fileUri);
     }
 
+    [TestCase("12345678")]
+    [TestCase("++12345678901")]
+    [TestCase("+1(415)555-1212")]
+    public void WithPhoneNumber_InvalidPhoneNumber_ThrowsArgumentException(String phoneNumber)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithPhoneNumber(phoneNumber))
+                     .Should().ThrowExactly<ArgumentException>()
+                     .WithMessage("Phone number must start *");
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
+    public void WithPhoneNumber_NullOrWhitespacePhoneNumber_ThrowsArgumentException(String? phoneNumber)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithPhoneNumber(phoneNumber!))
+                     .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [TestCase("+12345678901")]
+    [TestCase("+442071838750")]
+    [TestCase("+918527663529")]
+    public void WithPhoneNumber_ValidPhoneNumber_SetsPhoneNumber(String phoneNumber)
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithPhoneNumber(phoneNumber)
+                      .Build();
+
+        message.PhoneNumber.Should().Be(phoneNumber);
+    }
+
     [TestCase((NtfyPriority)100)]
     [TestCase((NtfyPriority)0)]
     [TestCase((NtfyPriority)1323)]
@@ -289,5 +320,15 @@ public class NtfyMessageBuilderTests
     {
         FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithTitle(title!))
                      .Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Test]
+    public void WithVerifiedPhoneNumber_SetsYesAsPhoneNumber()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithVerifiedPhoneNumber()
+                      .Build();
+
+        message.PhoneNumber.Should().Be("yes");
     }
 }

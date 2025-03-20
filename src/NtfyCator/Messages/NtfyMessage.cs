@@ -30,6 +30,10 @@ public class NtfyMessage
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Uri? IconUri { get; set; }
 
+    [JsonPropertyName("call")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public String? PhoneNumber { get; set; }
+
     [JsonPropertyName("priority")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public NtfyPriority? Priority { get; set; }
