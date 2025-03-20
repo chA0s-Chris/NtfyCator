@@ -102,6 +102,14 @@ public abstract class NtfyMessageBuilderBase<TBuilder> where TBuilder : NtfyMess
         return (TBuilder)this;
     }
 
+    public TBuilder WithScheduledDelivery(String delayOrTimestamp)
+    {
+        if (String.IsNullOrWhiteSpace(delayOrTimestamp)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(delayOrTimestamp));
+
+        _message.Delay = delayOrTimestamp;
+        return (TBuilder)this;
+    }
+
     public TBuilder WithTag(String tag)
     {
         if (String.IsNullOrWhiteSpace(tag)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(tag));

@@ -13,6 +13,7 @@ public class NtfyMessageBuilderTests
     private static readonly List<String> _emojisAsStrings = ["zzz", "rocket", "face_with_head_bandage"];
     private static readonly List<String> _tags = ["tag1", "tag2"];
     private readonly String _body = "This is **just** a _Test_!";
+    private readonly String _delay = "30m";
     private readonly String _email = "none@of.your.biz";
     private readonly String _file = "my.file.dat";
     private readonly Uri _fileUri = new("https://my.file.com/file.dat");
@@ -242,6 +243,25 @@ public class NtfyMessageBuilderTests
     {
         FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithPriority(priority))
                      .Should().ThrowExactly<InvalidEnumArgumentException>();
+    }
+
+    [Test]
+    public void WithScheduledDelivery_NonNullOrWhitespaceDelay_SetsDelay()
+    {
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithScheduledDelivery(_delay)
+                      .Build();
+
+        message.Delay.Should().Be(_delay);
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void WithScheduledDelivery_NullOrWhitespaceDelay_ThrowsArgumentException(String? delay)
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithScheduledDelivery(delay!))
+                     .Should().ThrowExactly<ArgumentException>();
     }
 
     [Test]

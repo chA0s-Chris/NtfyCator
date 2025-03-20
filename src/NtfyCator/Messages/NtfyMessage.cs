@@ -22,6 +22,10 @@ public class NtfyMessage
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Uri? ClickUri { get; set; }
 
+    [JsonPropertyName("delay")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public String? Delay { get; set; }
+
     [JsonPropertyName("email")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public String? Email { get; set; }
