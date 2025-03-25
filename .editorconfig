@@ -13,7 +13,7 @@ charset = utf-8
 indent_size = 2
 tab_width = 2
 
-[*.{csproj,props,config,targets,nuspec,xml}]
+[*.{csproj,slnx,props,config,targets,nuspec,xml}]
 charset = utf-8
 indent_size = 2
 tab_width = 2

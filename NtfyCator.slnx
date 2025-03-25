@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/build/">
+    <Project Path="build/BuildPipeline.csproj">
+      <Build Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/misc/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/misc/github/">
+    <File Path=".github\dependabot.yml" />
+  </Folder>
+  <Folder Name="/misc/github/workflows/">
+    <File Path=".github\workflows\ci.yml" />
+  </Folder>
+  <Folder Name="/src/">
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/NtfyCator/NtfyCator.csproj" />
+    <Project Path="src/NtfyCatorTools/NtfyCatorTools.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <File Path="test/Directory.Build.props" />
+    <Project Path="test/NtfyCator.Tests/NtfyCator.Tests.csproj" />
+  </Folder>
+</Solution>
