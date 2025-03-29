@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Christian Flessa. All rights reserved.
+﻿// Copyright (c) 2025 Christian Flessa. All rights reserved.
 // This file is licensed under the MIT license. See LICENSE in the project root for more information.
 namespace NtfyCator;
 
@@ -8,10 +8,21 @@ using NtfyCator.Messages;
 using NtfyCator.Options;
 using NtfyCator.Security;
 
+/// <summary>
+/// Represents the base implementation of a notificator.
+/// </summary>
 internal sealed class Notificator : INotificator
 {
     private readonly INtfyHttpClient _httpClient;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Notificator"/> class.
+    /// </summary>
+    /// <param name="httpClient">The HTTP client to use for sending notifications.</param>
+    /// <param name="options">The options for configuring the notificator.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="httpClient"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
     public Notificator(INtfyHttpClient httpClient, IOptions<NtfyCatorOptions> options)
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -20,8 +31,10 @@ internal sealed class Notificator : INotificator
         ServerUri = new(options.Value.Uri, UriKind.Absolute);
     }
 
+    /// <inheritdoc/>
     public Uri ServerUri { get; }
 
+    /// <inheritdoc/>
     public async Task NotifyAsync(NtfyMessage message, CancellationToken cancellationToken = default)
     {
         if (message == null) throw new ArgumentNullException(nameof(message));
@@ -29,6 +42,7 @@ internal sealed class Notificator : INotificator
         await _httpClient.SendNotificationAsync(ServerUri, message, cancellationToken);
     }
 
+    /// <inheritdoc/>
     public INotificator WithAccessToken(String accessToken)
     {
         if (String.IsNullOrWhiteSpace(accessToken)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(accessToken));
@@ -37,6 +51,7 @@ internal sealed class Notificator : INotificator
         return this;
     }
 
+    /// <inheritdoc/>
     public INotificator WithCredentials(String user, String password)
     {
         if (String.IsNullOrWhiteSpace(user)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(user));

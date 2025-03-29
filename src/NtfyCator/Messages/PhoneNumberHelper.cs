@@ -4,6 +4,9 @@ namespace NtfyCator.Messages;
 
 using System.Text.RegularExpressions;
 
+/// <summary>
+/// Provides helper methods for working with phone numbers.
+/// </summary>
 internal static partial class PhoneNumberHelper
 {
 #if NETSTANDARD2_0
@@ -15,6 +18,13 @@ internal static partial class PhoneNumberHelper
     private static partial Regex ValidPhoneNumbers();
 #endif
 
+    /// <summary>
+    /// Validates the specified phone number.
+    /// </summary>
+    /// <param name="phoneNumber">The phone number to validate.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the phone number does not start with + or contains more than 14 digits.
+    /// </exception>
     public static void Validate(String phoneNumber)
     {
         if (!_validPhoneNumbers.IsMatch(phoneNumber))

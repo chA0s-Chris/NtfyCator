@@ -6,16 +6,24 @@ using NtfyCator.Messages;
 using NtfyCator.Security;
 using System.Net.Http.Json;
 
+/// <summary>
+/// Implementation of an HTTP client to transport notifications.
+/// </summary>
 internal class NtfyHttpClient : INtfyHttpClient
 {
     private readonly HttpClient _httpClient;
     private NotificatorSecurity? _security;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NtfyHttpClient"/> class.
+    /// </summary>
+    /// <param name="httpClient">Instance of <see cref="HttpClient"/> to use for sending requests.</param>
     public NtfyHttpClient(HttpClient httpClient)
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
+    /// <inheritdoc/>
     public async Task SendNotificationAsync(Uri endpoint, NtfyMessage message, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
@@ -29,6 +37,7 @@ internal class NtfyHttpClient : INtfyHttpClient
         response.EnsureSuccessStatusCode();
     }
 
+    /// <inheritdoc/>
     public void SetSecurity(NotificatorSecurity security)
     {
         if (_security is not null)

@@ -4,6 +4,9 @@ namespace NtfyCator.Messages;
 
 using System.Runtime.Serialization;
 
+/// <summary>
+/// Emojis supported by ntfy.
+/// </summary>
 public enum Emoji
 {
     /// <summary>
