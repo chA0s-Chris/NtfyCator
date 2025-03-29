@@ -67,6 +67,106 @@ public class NtfyMessageBuilderTests
         message.Topic.Should().Be(_topic);
     }
 
+    [Test]
+    public void WithAction_CalledTwice_AddsBothActionsToMessage()
+    {
+        var action1 = new NtfyViewAction
+        {
+            Label = "View this!",
+            Url = "https://ntfy.sh"
+        };
+
+        var action2 = new NtfyHttpAction
+        {
+            Label = "HTTP Action!",
+            Url = "https://ntfy.sh",
+            Method = NtfyHttpMethod.Post,
+            Body = "{}",
+            Headers = new()
+            {
+                ["ContentType"] = "application/json"
+            }
+        };
+
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithAction(action1)
+                      .WithAction(action2)
+                      .Build();
+
+        message.Actions.Should().ContainInOrder(action1, action2);
+    }
+
+    [Test]
+    public void WithAction_NullAction_ThrowsArgumentNullException()
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithAction(null!))
+                     .Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    public void WithAction_ValidAction_AddsActionToMessage()
+    {
+        var action = new NtfyViewAction
+        {
+            Label = "View this!",
+            Url = "https://ntfy.sh"
+        };
+
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithAction(action)
+                      .Build();
+
+        message.Actions.Should().ContainSingle()
+               .Which.Should().BeEquivalentTo(action);
+    }
+
+    [Test]
+    public void WithActions_NullActions_ThrowsArgumentNullException()
+    {
+        FluentActions.Invoking(() => new NtfyMessageBuilder(_topic).WithActions(null!))
+                     .Should().ThrowExactly<ArgumentNullException>();
+    }
+
+    [Test]
+    public void WithActions_ThreeValidActions_AddsAllActionsToMessage()
+    {
+        var action1 = new NtfyViewAction
+        {
+            Label = "View this!",
+            Url = "https://ntfy.sh",
+            ClearNotification = true
+        };
+
+        var action2 = new NtfyHttpAction
+        {
+            Label = "HTTP Action!",
+            Url = "https://ntfy.sh",
+            Method = NtfyHttpMethod.Get,
+            Headers = new()
+            {
+                ["X-DATA"] = "data"
+            }
+        };
+
+        var action3 = new NtfyBroadcastAction
+        {
+            Label = "Broadcast Action!",
+            Url = "https://ntfy.sh",
+            Intent = "my.custom.intent.DO_STUFF",
+            Extras = new()
+            {
+                ["cmd"] = "do_stuff",
+                ["arg"] = "arg1"
+            }
+        };
+
+        var message = new NtfyMessageBuilder(_topic)
+                      .WithActions(action1, action2, action3)
+                      .Build();
+
+        message.Actions.Should().ContainInOrder(action1, action2, action3);
+    }
+
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]

@@ -20,6 +20,28 @@ public abstract class NtfyMessageBuilderBase<TBuilder> where TBuilder : NtfyMess
 
     protected NtfyMessage Message => _message;
 
+    public TBuilder WithAction(NtfyAction action)
+    {
+        if (action == null) throw new ArgumentNullException(nameof(action));
+
+        _message.Actions ??= [];
+        _message.Actions.Add(action);
+
+        return (TBuilder)this;
+    }
+
+    public TBuilder WithActions(params NtfyAction[] actions)
+    {
+        if (actions == null) throw new ArgumentNullException(nameof(actions));
+
+        foreach (var action in actions)
+        {
+            WithAction(action);
+        }
+
+        return (TBuilder)this;
+    }
+
     public TBuilder WithAttachment(String uri, String? name = null)
     {
         if (String.IsNullOrWhiteSpace(uri)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(uri));

@@ -6,6 +6,10 @@ using System.Text.Json.Serialization;
 
 public class NtfyMessage
 {
+    [JsonPropertyName("actions")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<NtfyAction>? Actions { get; set; }
+
     [JsonPropertyName("filename")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public String? AttachmentName { get; set; }
