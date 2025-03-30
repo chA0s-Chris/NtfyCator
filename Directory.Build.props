@@ -12,6 +12,8 @@
     <Nullable>enable</Nullable>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+
     <NoWarn>1591</NoWarn>
     <PreferredUILang>en</PreferredUILang>
   </PropertyGroup>
