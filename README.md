@@ -12,7 +12,17 @@ A minimalistic .NET library for publishing messages to [ntfy.sh](https://ntfy.sh
 
 ## Installation
 
-TBD
+You can install `NtfyCator` via [NuGet](https://www.nuget.org/packages/NtfyCator):
+
+```bash
+dotnet add package NtfyCator --version 0.1.0
+```
+
+Or using the NuGet Package Manager in Visual Studio:
+
+```powershell
+Install-Package NtfyCator -Version 0.1.0
+```
 
 ## Getting Started
 
