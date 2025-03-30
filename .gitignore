@@ -505,3 +505,6 @@ $RECYCLE.BIN/
 
 # testing
 test/NtfyCator.Tests/BasicTest.cs
+
+# signing key
+NtfyCator.snk
