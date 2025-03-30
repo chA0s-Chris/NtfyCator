@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: write  # Required to create releases with GITHUB_TOKEN
+
 jobs:
   release:
     runs-on: ubuntu-latest
