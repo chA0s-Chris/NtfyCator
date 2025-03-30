@@ -55,7 +55,7 @@ internal class Build : NukeBuild,
         target.Inherit<IReportCoverage>()
               .Executes(() =>
               {
-                  var coverage = "???";
+                  var coverage = "unknown";
 
                   var json = File.ReadAllText(CoverageSummary);
                   using var jsonDocument = JsonDocument.Parse(json);
