@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{6DD5359D-8
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 		.editorconfig = .editorconfig
+		coverlet.xml = coverlet.xml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildPipeline", "build\BuildPipeline.csproj", "{DB92CF59-B2C7-4374-9BBF-A8C3C758E551}"

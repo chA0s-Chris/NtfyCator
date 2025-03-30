@@ -7,10 +7,16 @@ using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.ReportGenerator;
+using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using Nuke.Components;
+using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text.Json;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 internal class Build : NukeBuild,
@@ -20,7 +26,8 @@ internal class Build : NukeBuild,
                        ICompile,
                        ITest,
                        IPack,
-                       IPublish
+                       IPublish,
+                       IReportCoverage
 {
     public Configure<DotNetBuildSettings> CompileSettings => settings =>
         settings.EnableContinuousIntegrationBuild()
@@ -45,6 +52,41 @@ internal class Build : NukeBuild,
     public Configure<DotNetNuGetPushSettings> PushSettings => settings =>
         settings.EnableSkipDuplicate();
 
+    public Target ReportCoverage => target =>
+        target.Inherit<IReportCoverage>()
+              .Executes(() =>
+              {
+                  var coverage = "unknown";
+
+                  try
+                  {
+                      var json = File.ReadAllText(CoverageSummary);
+                      using var jsonDocument = JsonDocument.Parse(json);
+
+                      if (jsonDocument.RootElement.TryGetProperty("summary", out var summary) &&
+                          summary.TryGetProperty("linecoverage", out var lineCoverage))
+                      {
+                          coverage = $"{lineCoverage.GetDouble().ToString("#.0", CultureInfo.InvariantCulture)}%";
+                      }
+                  }
+                  catch (Exception e)
+                  {
+                      Log.Error(e, "Failed to read coverage summary.");
+                  }
+
+                  ReportSummary(config => config.AddPair("Coverage", coverage));
+              });
+
+    public Configure<ReportGeneratorSettings> ReportGeneratorSettings => settings =>
+        settings.SetReports(From<IReportCoverage>().TestResultDirectory / "**/coverage.cobertura.xml")
+                .SetReportTypes(ReportTypes.JsonSummary);
+
+    public Configure<DotNetTestSettings> TestSettings => settings =>
+        settings.EnableNoBuild()
+                .When(InvokedTargets.Contains(((IReportCoverage)this).ReportCoverage), transform =>
+                          transform.SetDataCollector("XPlat Code Coverage")
+                                   .SetSettingsFile("coverlet.xml"));
+
     private static AbsolutePath TestsDirectory => RootDirectory / "tests";
 
     private Target Clean => target =>
@@ -56,6 +98,8 @@ internal class Build : NukeBuild,
 
                   ((IHazArtifacts)this).ArtifactsDirectory.CreateOrCleanDirectory();
               });
+
+    private AbsolutePath CoverageSummary => From<IReportCoverage>().CoverageReportDirectory / "Summary.json";
 
     private AbsolutePath SourceDirectory => RootDirectory / "src";
 
@@ -85,6 +129,10 @@ internal class Build : NukeBuild,
                                   From<IPublish>().PushDegreeOfParallelism,
                                   From<IPublish>().PushCompleteOnFailure);
               });
+
+    Boolean IReportCoverage.CreateCoverageHtmlReport => true;
+
+    Boolean IReportCoverage.ReportToCodecov => false;
 
     IEnumerable<Project> ITest.TestProjects => Partition.GetCurrent(From<IHazSolution>().Solution.GetAllProjects("*.Tests"));
 
