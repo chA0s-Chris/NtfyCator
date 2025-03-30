@@ -11,6 +11,7 @@ using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using Nuke.Components;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -57,13 +58,20 @@ internal class Build : NukeBuild,
               {
                   var coverage = "unknown";
 
-                  var json = File.ReadAllText(CoverageSummary);
-                  using var jsonDocument = JsonDocument.Parse(json);
-
-                  if (jsonDocument.RootElement.TryGetProperty("summary", out var summary) &&
-                      summary.TryGetProperty("linecoverage", out var lineCoverage))
+                  try
                   {
-                      coverage = $"{lineCoverage.GetDouble().ToString("#.0", CultureInfo.InvariantCulture)}%";
+                      var json = File.ReadAllText(CoverageSummary);
+                      using var jsonDocument = JsonDocument.Parse(json);
+
+                      if (jsonDocument.RootElement.TryGetProperty("summary", out var summary) &&
+                          summary.TryGetProperty("linecoverage", out var lineCoverage))
+                      {
+                          coverage = $"{lineCoverage.GetDouble().ToString("#.0", CultureInfo.InvariantCulture)}%";
+                      }
+                  }
+                  catch (Exception e)
+                  {
+                      Log.Error(e, "Failed to read coverage summary.");
                   }
 
                   ReportSummary(config => config.AddPair("Coverage", coverage));
