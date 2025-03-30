@@ -4,6 +4,14 @@
   <PropertyGroup>
     <TargetFrameworks>$(FullTargets)</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>megaphone.png</PackageIcon>
+    <AssemblyOriginatorKeyFile>../../NtfyCator.snk</AssemblyOriginatorKeyFile>
+    <Description>NtfyCator - A minimalistic .NET library for publishing messages to ntfy.sh.</Description>
+    <Authors>Christian Flessa</Authors>
+    <Copyright>Copyright © 2025 Christian Flessa</Copyright>
+    <PackageProjectUrl>https://github.com/chA0s-Chris/NtfyCator</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
