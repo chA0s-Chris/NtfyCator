@@ -35,6 +35,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{510CAD19-651B-4CC2-858B-B7BC6F89A7B5}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\nuget_release.yml = .github\workflows\nuget_release.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NtfyCatorTools", "src\NtfyCatorTools\NtfyCatorTools.csproj", "{7B2E61B7-FD76-4807-8998-3D7A69C2A92D}"

@@ -1,0 +1,39 @@
+name: NuGet Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Decode SNK
+        run: |
+          echo "${{ secrets.NTFYCATOR_SNK }}" | base64 --decode > NtfyCator.snk
+
+      - name: Run NUKE pipeline
+        run: bash build.sh Publish --nuget-api-key ${{ secrets.NUGET_API_KEY }}
+
+      - name: Remove SNK
+        run: |
+          rm NtfyCator.snk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          files: artifacts/packages/*.nupkg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

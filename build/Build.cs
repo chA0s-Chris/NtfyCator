@@ -19,7 +19,8 @@ internal class Build : NukeBuild,
                        IHazGitRepository,
                        ICompile,
                        ITest,
-                       IPack
+                       IPack,
+                       IPublish
 {
     public Configure<DotNetBuildSettings> CompileSettings => settings =>
         settings.EnableContinuousIntegrationBuild()
@@ -40,6 +41,9 @@ internal class Build : NukeBuild,
                 .AddProperty("AssemblyOriginatorKeyFile", "../../NtfyCator.snk")
                 .EnableIncludeSymbols()
                 .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg);
+
+    public Configure<DotNetNuGetPushSettings> PushSettings => settings =>
+        settings.EnableSkipDuplicate();
 
     private static AbsolutePath TestsDirectory => RootDirectory / "tests";
 
@@ -65,6 +69,21 @@ internal class Build : NukeBuild,
 
                   ReportSummary(_ => _
                                     .AddPair("Packages", From<IPack>().PackagesDirectory.GlobFiles("*.nupkg").Count.ToString()));
+              });
+
+    Target IPublish.Publish => target =>
+        target.DependsOn(From<IPack>().Pack)
+              .Requires(() => From<IPublish>().NuGetApiKey)
+              .Executes(() =>
+              {
+                  DotNetNuGetPush(_ => _
+                                       .Apply(From<IPublish>().PushSettingsBase)
+                                       .Apply(PushSettings)
+                                       .CombineWith(From<IPublish>().PushPackageFiles, (_, v) => _
+                                                        .SetTargetPath(v))
+                                       .Apply(From<IPublish>().PackagePushSettings),
+                                  From<IPublish>().PushDegreeOfParallelism,
+                                  From<IPublish>().PushCompleteOnFailure);
               });
 
     IEnumerable<Project> ITest.TestProjects => Partition.GetCurrent(From<IHazSolution>().Solution.GetAllProjects("*.Tests"));
