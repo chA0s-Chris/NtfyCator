@@ -13,7 +13,7 @@ public class NtfyTooLargeException : NtfyException
     /// Initializes a new instance of the <see cref="NtfyTooLargeException"/> class with a specified inner exception.
     /// </summary>
     /// <param name="httpRequestException">The exception that is the cause of the current exception.</param>
-    public NtfyTooLargeException(HttpRequestException httpRequestException)
+    internal NtfyTooLargeException(HttpRequestException httpRequestException)
         : base("Notification too large. The server did not accept the notification.",
                HttpStatusCode.RequestEntityTooLarge,
                httpRequestException) { }
