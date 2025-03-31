@@ -2,6 +2,12 @@
 
 A minimalistic .NET library for publishing messages to [ntfy.sh](https://ntfy.sh/) and self-hosted instances.
 
+[![GitHub License](https://img.shields.io/github/license/chA0s-Chris/NtfyCator?style=for-the-badge)](https://github.com/chA0s-Chris/NtfyCator/blob/main/LICENSE)
+[![NuGet Version](https://img.shields.io/nuget/v/NtfyCator?style=for-the-badge)](https://www.nuget.org/packages/NtfyCator)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/NtfyCator?style=for-the-badge)](https://www.nuget.org/packages/NtfyCator)
+[![GitHub last commit](https://img.shields.io/github/last-commit/chA0s-Chris/NtfyCator?style=for-the-badge)](https://github.com/chA0s-Chris/NtfyCator/commits/)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/chA0s-Chris/NtfyCator/ci.yml?style=for-the-badge)]()
+
 ## Features
 
 ✅ Simple and lightweight
