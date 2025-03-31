@@ -2,8 +2,10 @@
 // This file is licensed under the MIT license. See LICENSE in the project root for more information.
 namespace NtfyCator.Communications;
 
+using NtfyCator.Communications.Exceptions;
 using NtfyCator.Messages;
 using NtfyCator.Security;
+using System.Net;
 using System.Net.Http.Json;
 
 /// <summary>
@@ -32,9 +34,27 @@ internal class NtfyHttpClient : INtfyHttpClient
         };
 
         _security?.SecureRequest(request);
-        var response = await _httpClient.SendAsync(request, cancellationToken);
-
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            var response = await _httpClient.SendAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException e)
+        {
+#if NETSTANDARD2_0
+            throw new NtfyException("Error sending notification.", null, e);
+#else
+            throw e.StatusCode switch
+            {
+                HttpStatusCode.Unauthorized => new NtfyUnauthorizedException(e),
+                HttpStatusCode.Forbidden => new NtfyForbiddenException(e),
+                HttpStatusCode.NotFound => new NtfyNotFoundException(e),
+                HttpStatusCode.RequestEntityTooLarge => new NtfyTooLargeException(e),
+                HttpStatusCode.TooManyRequests => new NtfyRateLimitReachedException(e),
+                _ => new NtfyException("Error sending notification.", e.StatusCode, e)
+            };
+#endif
+        }
     }
 
     /// <inheritdoc/>
