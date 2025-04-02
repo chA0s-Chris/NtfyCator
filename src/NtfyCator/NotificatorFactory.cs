@@ -14,6 +14,8 @@ using NtfyCator.Options;
 /// </remarks>
 public static class NotificatorFactory
 {
+    private static HttpClient? _httpClient;
+
     /// <summary>
     /// Creates an instance of <see cref="INotificator"/>.
     /// </summary>
@@ -22,7 +24,7 @@ public static class NotificatorFactory
     /// <returns>An instance of <see cref="INotificator"/>.</returns>
     public static INotificator CreateNotificator(HttpClient? httpClient = null, NtfyCatorOptions? options = null)
     {
-        var ntfyHttpClient = new NtfyHttpClient(httpClient ?? new HttpClient());
+        var ntfyHttpClient = new NtfyHttpClient(httpClient ?? (_httpClient ??= new()));
         var notificator = new Notificator(ntfyHttpClient, new OptionsWrapper<NtfyCatorOptions>(options ?? new NtfyCatorOptions()));
         return notificator;
     }
